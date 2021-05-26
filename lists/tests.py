@@ -15,4 +15,4 @@ class HomePageTest(TestCase):
         html = response.content.decode("utf8")
         self.assertRegex(html, r"^<html>")
         self.assertIn("<title>To-Do lists</title>", html)
-        self.assertRegex(html, r"</html>$")
+        self.assertRegex(html.strip(), r"</html>$")
