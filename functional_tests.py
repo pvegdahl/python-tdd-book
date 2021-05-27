@@ -34,12 +34,11 @@ class NewVisitorTest(unittest.TestCase):
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
 
-        table = self.browser.find_element_by_id("id_list_table")
-        rows = table.find_elements_by_tag_name("tr")
-        self.assertIn("1: Buy peacock feathers", [row.text for row in rows])
+        self._check_for_row_in_list_table("1: Buy peacock feathers")
 
         # There is still a text box to enter another item.  She
         # enters "Use peacock feathers to make a fly"
+        input_box = self.browser.find_element_by_id("id_new_item")
         input_box.send_keys("Use peacock feathers to make a fly")
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
@@ -47,14 +46,20 @@ class NewVisitorTest(unittest.TestCase):
         # The page updates again, and now shows both items
         table = self.browser.find_element_by_id("id_list_table")
         rows = table.find_elements_by_tag_name("tr")
-        # self.assertIn("1: Buy peacock feathers", [row.text for row in rows])
-        self.assertIn("2: Use peacock feathers to make a fly", [row.text for row in rows])
+        self._check_for_row_in_list_table("1: Buy peacock feathers")
+        self._check_for_row_in_list_table("2: Use peacock feathers to make a fly")
 
         # There is now a unique URL to use to save her to-do list
         # There is explanatory text to that effect.
         self.fail("Finish the test!")
 
         # The user visits that unique URL and the todo list is still there!
+
+    def _check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id("id_list_table")
+        rows = table.find_elements_by_tag_name("tr")
+        self.assertIn(row_text, [row.text for row in rows])
+
 
 
 if __name__ == "__main__":
