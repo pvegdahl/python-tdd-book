@@ -2,6 +2,7 @@ import time
 import unittest
 
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 from django.test import LiveServerTestCase
 
@@ -32,15 +33,15 @@ class NewVisitorTest(LiveServerTestCase):
         # "1: Buy peacock feathers" as a to-do list item
         self._send_input_and_sleep("Buy peacock feathers")
 
-        self._check_for_row_in_list_table("1: Buy peacock feathers")
+        self._wait_for_row_in_list_table("1: Buy peacock feathers")
 
         # There is still a text box to enter another item.  She
         # enters "Use peacock feathers to make a fly"
         self._send_input_and_sleep("Use peacock feathers to make a fly")
 
         # The page updates again, and now shows both items
-        self._check_for_row_in_list_table("1: Buy peacock feathers")
-        self._check_for_row_in_list_table("2: Use peacock feathers to make a fly")
+        self._wait_for_row_in_list_table("1: Buy peacock feathers")
+        self._wait_for_row_in_list_table("2: Use peacock feathers to make a fly")
 
         # There is now a unique URL to use to save her to-do list
         # There is explanatory text to that effect.
@@ -48,13 +49,20 @@ class NewVisitorTest(LiveServerTestCase):
 
         # The user visits that unique URL and the todo list is still there!
 
-    def _check_for_row_in_list_table(self, row_text: str) -> None:
-        table = self.browser.find_element_by_id("id_list_table")
-        rows = table.find_elements_by_tag_name("tr")
-        self.assertIn(row_text, [row.text for row in rows])
+    def _wait_for_row_in_list_table(self, row_text: str, timeout: int = 5) -> None:
+        start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element_by_id("id_list_table")
+                rows = table.find_elements_by_tag_name("tr")
+                self.assertIn(row_text, [row.text for row in rows])
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > timeout:
+                    raise e
+                time.sleep(0.1)
 
     def _send_input_and_sleep(self, input_text: str) -> None:
         input_box = self.browser.find_element_by_id("id_new_item")
         input_box.send_keys(input_text)
         input_box.send_keys(Keys.ENTER)
-        time.sleep(1)
