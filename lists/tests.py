@@ -12,8 +12,9 @@ class HomePageTest(TestCase):
 
         self.assertEqual(1, Item.objects.count())
         self.assertEqual(item_text, Item.objects.first().text)
-        self.assertIn(item_text, response.content.decode())
-        self.assertTemplateUsed(response, "home.html")
+
+        self.assertEqual(302, response.status_code)
+        self.assertEqual("/", response["location"])
 
     def test_only_save_items_when_necessary(self):
         self.client.get("/")
