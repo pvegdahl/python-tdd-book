@@ -31,13 +31,13 @@ class NewVisitorTest(LiveServerTestCase):
         # She enters "Buy peacock feathers" into a text box
         # She hits enter, the page updates, and now lists:
         # "1: Buy peacock feathers" as a to-do list item
-        self._send_input_and_sleep("Buy peacock feathers")
+        self._send_input("Buy peacock feathers")
 
         self._wait_for_row_in_list_table("1: Buy peacock feathers")
 
         # There is still a text box to enter another item.  She
         # enters "Use peacock feathers to make a fly"
-        self._send_input_and_sleep("Use peacock feathers to make a fly")
+        self._send_input("Use peacock feathers to make a fly")
 
         # The page updates again, and now shows both items
         self._wait_for_row_in_list_table("1: Buy peacock feathers")
@@ -62,7 +62,7 @@ class NewVisitorTest(LiveServerTestCase):
                     raise e
                 time.sleep(0.1)
 
-    def _send_input_and_sleep(self, input_text: str) -> None:
+    def _send_input(self, input_text: str) -> None:
         input_box = self.browser.find_element_by_id("id_new_item")
         input_box.send_keys(input_text)
         input_box.send_keys(Keys.ENTER)
