@@ -3,9 +3,10 @@ import unittest
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from django.test import LiveServerTestCase
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self) -> None:
         self.browser = webdriver.Firefox()
 
@@ -15,7 +16,7 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Go to the webpage to check out the app
-        self.browser.get("http://localhost:8000")
+        self.browser.get(self.live_server_url)
 
         # The page title mentions to-do lists
         self.assertIn("To-Do", self.browser.title)
@@ -57,8 +58,3 @@ class NewVisitorTest(unittest.TestCase):
         input_box.send_keys(input_text)
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
-
-
-
-if __name__ == "__main__":
-    unittest.main(warnings="ignore")
