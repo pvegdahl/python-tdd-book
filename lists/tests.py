@@ -15,6 +15,10 @@ class HomePageTest(TestCase):
         self.assertIn(item_text, response.content.decode())
         self.assertTemplateUsed(response, "home.html")
 
+    def test_only_save_items_when_necessary(self):
+        self.client.get("/")
+        self.assertEqual(0, Item.objects.count())
+
 
 class ItemModelTest(TestCase):
     def test_saving_and_retrieving_items(self):
