@@ -8,11 +8,12 @@ class HomePageTest(TestCase):
 
     def test_can_save_a_post_request(self):
         item_text = "A new list item"
-        response = self.client.post("/", data={"item_text": item_text})
-
+        self.client.post("/", data={"item_text": item_text})
         self.assertEqual(1, Item.objects.count())
         self.assertEqual(item_text, Item.objects.first().text)
 
+    def test_redirects_after_post(self):
+        response = self.client.post("/", data={"item_text": "The item text"})
         self.assertEqual(302, response.status_code)
         self.assertEqual("/", response["location"])
 
