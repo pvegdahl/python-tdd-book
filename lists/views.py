@@ -12,4 +12,4 @@ def home_page(request: HttpRequest):
 
 
 def view_list(request: HttpRequest):
-    return render(request, "home.html", {"items": Item.objects.all()})
+    return render(request, "list.html", {"items": Item.objects.all()})
