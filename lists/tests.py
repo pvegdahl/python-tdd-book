@@ -6,10 +6,6 @@ class HomePageTest(TestCase):
     def test_homepage_returns_correct_html(self):
         self.assertTemplateUsed(self.client.get("/"), "home.html")
 
-    def test_only_save_items_when_necessary(self):
-        self.client.get("/")
-        self.assertEqual(0, Item.objects.count())
-
 
 class ListViewTest(TestCase):
     def test_displays_all_items(self):
