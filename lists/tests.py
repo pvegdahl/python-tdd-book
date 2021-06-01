@@ -8,20 +8,29 @@ class HomePageTest(TestCase):
 
 
 class ListViewTest(TestCase):
-    def test_displays_all_items(self):
+    def test_use_list_template(self):
         list_ = List.objects.create()
-        text_a = "aaa"
-        text_b = "bbb"
-        Item.objects.create(text=text_a, list=list_)
-        Item.objects.create(text=text_b, list=list_)
+        self.assertTemplateUsed(self.client.get(f"/lists/{list_.id}/"), "list.html")
 
-        response = self.client.get("/lists/the-only-list-in-the-world/")
+    def test_displays_only_items_for_that_list(self):
+        correct_list = List.objects.create()
+        text_a = "itemy 1"
+        text_b = "itemy 2"
+        Item.objects.create(text=text_a, list=correct_list)
+        Item.objects.create(text=text_b, list=correct_list)
+
+        other_list = List.objects.create()
+        other_text_a = "other text 1"
+        other_text_b = "other text 2"
+        Item.objects.create(text=other_text_a, list=other_list)
+        Item.objects.create(text=other_text_b, list=other_list)
+
+        response = self.client.get(f"/lists/{correct_list.id}/")
 
         self.assertContains(response, text_a)
         self.assertContains(response, text_b)
-
-    def test_use_list_template(self):
-        self.assertTemplateUsed(self.client.get("/lists/the-only-list-in-the-world/"), "list.html")
+        self.assertNotContains(response, other_text_a)
+        self.assertNotContains(response, other_text_b)
 
 
 class ListAndItemModelTest(TestCase):
@@ -62,5 +71,6 @@ class NewListTest(TestCase):
 
     def test_redirects_after_post(self):
         response = self.client.post("/lists/new", data={"item_text": "The item text"})
-        self.assertRedirects(response, "/lists/the-only-list-in-the-world/")
+        new_list = List.objects.first()
+        self.assertRedirects(response, f"/lists/{new_list.id}/")
 
