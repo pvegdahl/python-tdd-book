@@ -18,3 +18,8 @@ def new_list(request: HttpRequest) -> HttpResponse:
     Item.objects.create(text=(request.POST["item_text"]), list=the_new_list)
     return redirect(f"/lists/{the_new_list.id}/")
 
+
+def add_item(request: HttpRequest, list_id: str) -> HttpResponse:
+    list_ = List.objects.get(id=list_id)
+    Item.objects.create(text=request.POST["item_text"], list=list_)
+    return redirect(f"/lists/{list_.id}/")
