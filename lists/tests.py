@@ -32,6 +32,12 @@ class ListViewTest(TestCase):
         self.assertNotContains(response, other_text_a)
         self.assertNotContains(response, other_text_b)
 
+    def test_passes_correct_list_to_template(self):
+        List.objects.create()  # other list
+        correct_list = List.objects.create()
+        response = self.client.get(f"/lists/{correct_list.id}/")
+        self.assertEqual(correct_list, response.context["list"])
+
 
 class ListAndItemModelTest(TestCase):
     def test_saving_and_retrieving_items(self):

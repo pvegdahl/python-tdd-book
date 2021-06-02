@@ -9,8 +9,7 @@ def home_page(request: HttpRequest) -> HttpResponse:
 
 def view_list(request: HttpRequest, list_id: str) -> HttpResponse:
     list_ = List.objects.get(id=list_id)
-    items = Item.objects.filter(list=list_)
-    return render(request, "list.html", {"items": items})
+    return render(request, "list.html", {"list": list_})
 
 
 def new_list(request: HttpRequest) -> HttpResponse:
