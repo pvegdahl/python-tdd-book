@@ -8,7 +8,7 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 
 
-class NewVisitorTest(StaticLiveServerTestCase):
+class FunctionalTest(StaticLiveServerTestCase):
     def setUp(self) -> None:
         self.browser = webdriver.Firefox()
         staging_server = os.environ.get("STAGING_SERVER")
@@ -20,7 +20,27 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # Satisfied, everyone goes back to sleep
         self.browser.quit()
 
-    def test_can_start_a_list_and_retrieve_it_later(self):
+    def _wait_for_row_in_list_table(self, row_text: str, timeout: int = 5) -> None:
+        start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element_by_id("id_list_table")
+                rows = table.find_elements_by_tag_name("tr")
+                self.assertIn(row_text, [row.text for row in rows])
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > timeout:
+                    raise e
+                time.sleep(0.1)
+
+    def _send_input(self, input_text: str) -> None:
+        input_box = self.browser.find_element_by_id("id_new_item")
+        input_box.send_keys(input_text)
+        input_box.send_keys(Keys.ENTER)
+
+
+class NewVisitorTest(FunctionalTest):
+    def test_can_start_a_list_for_one_user(self):
         # Go to the webpage to check out the app
         self.browser.get(self.live_server_url)
 
@@ -47,24 +67,6 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # The page updates again, and now shows both items
         self._wait_for_row_in_list_table("1: Buy peacock feathers")
         self._wait_for_row_in_list_table("2: Use peacock feathers to make a fly")
-
-    def _wait_for_row_in_list_table(self, row_text: str, timeout: int = 5) -> None:
-        start_time = time.time()
-        while True:
-            try:
-                table = self.browser.find_element_by_id("id_list_table")
-                rows = table.find_elements_by_tag_name("tr")
-                self.assertIn(row_text, [row.text for row in rows])
-                return
-            except (AssertionError, WebDriverException) as e:
-                if time.time() - start_time > timeout:
-                    raise e
-                time.sleep(0.1)
-
-    def _send_input(self, input_text: str) -> None:
-        input_box = self.browser.find_element_by_id("id_new_item")
-        input_box.send_keys(input_text)
-        input_box.send_keys(Keys.ENTER)
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Edith starts a new to-do list
@@ -102,6 +104,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertNotIn("Buy peacock feathers", page_text)
         self.assertNotIn("make a fly", page_text)
 
+
+class LayoutAndStylingTest(FunctionalTest):
     def test_layout_and_styling(self):
         # Edith goes to the home page
         self.browser.get(self.live_server_url)
@@ -117,6 +121,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
         input_box = self.browser.find_element_by_id("id_new_item")
         self.assertAlmostEqual(512, input_box.location["x"] + input_box.size["width"] / 2, delta=10)
 
+
+class ItemValidationTest(FunctionalTest):
     @skip
     def test_cannot_add_empty_list_items(self):
         # User goes to the home page and tries to submit an empty list item.
