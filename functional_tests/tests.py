@@ -1,5 +1,6 @@
 import os
 import time
+from unittest import skip
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
@@ -46,7 +47,6 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # The page updates again, and now shows both items
         self._wait_for_row_in_list_table("1: Buy peacock feathers")
         self._wait_for_row_in_list_table("2: Use peacock feathers to make a fly")
-
 
     def _wait_for_row_in_list_table(self, row_text: str, timeout: int = 5) -> None:
         start_time = time.time()
@@ -116,3 +116,19 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self._wait_for_row_in_list_table("1: testing")
         input_box = self.browser.find_element_by_id("id_new_item")
         self.assertAlmostEqual(512, input_box.location["x"] + input_box.size["width"] / 2, delta=10)
+
+    @skip
+    def test_cannot_add_empty_list_items(self):
+        # User goes to the home page and tries to submit an empty list item.
+        # i.e. hits enter on an empty input box
+
+        # The home page refreshes with an error message
+
+        # The user tries again with some text, which now works
+
+        # Perversely, the user now tries again with an empty list item
+
+        # And gets a similar error message
+
+        # Which is correctable via adding input text
+        self.fail("Finish test")
