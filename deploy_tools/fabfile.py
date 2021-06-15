@@ -1,7 +1,6 @@
-import random
-
-from fabric.contrib.files import append, exists
+from django.core.management.utils import get_random_secret_key
 from fabric.api import env, run, cd, local
+from fabric.contrib.files import append, exists
 
 REPO_URL = "https://github.com/pvegdahl/python-tdd-book.git"
 
@@ -37,8 +36,7 @@ def _create_or_update_dotenv():
     append(".env", f"SITENAME={env.host}")
     current_contents = run("cat .env")
     if "DJANGO_SECRET_KEY" not in current_contents:
-        new_secret = "".join(random.SystemRandom().choices("abcdefghijklmnopqrstuvwxyz0123456789", k=50))
-        append(".env", f"DJANGO_SECRET_KEY={new_secret}")
+        append(".env", f"DJANGO_SECRET_KEY={get_random_secret_key()}")
 
 
 def _update_static_files():
