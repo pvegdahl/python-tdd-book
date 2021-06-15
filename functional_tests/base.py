@@ -20,19 +20,33 @@ class FunctionalTest(StaticLiveServerTestCase):
         self.browser.quit()
 
     def _wait_for_row_in_list_table(self, row_text: str, timeout: int = 5) -> None:
-        start_time = time.time()
-        while True:
-            try:
-                table = self.browser.find_element_by_id("id_list_table")
-                rows = table.find_elements_by_tag_name("tr")
-                self.assertIn(row_text, [row.text for row in rows])
-                return
-            except (AssertionError, WebDriverException) as e:
-                if time.time() - start_time > timeout:
-                    raise e
-                time.sleep(0.1)
+        self._wait_for(
+            fn=lambda: self.assertIn(
+                row_text,
+                [
+                    row.text
+                    for row in (
+                        self.browser.find_element_by_id(
+                            "id_list_table"
+                        ).find_elements_by_tag_name("tr")
+                    )
+                ],
+            ),
+            timeout=timeout,
+        )
 
     def _send_input(self, input_text: str) -> None:
         input_box = self.browser.find_element_by_id("id_new_item")
         input_box.send_keys(input_text)
         input_box.send_keys(Keys.ENTER)
+
+    @staticmethod
+    def _wait_for(fn, timeout: int = 5):
+        start_time = time.time()
+        while True:
+            try:
+                return fn()
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > timeout:
+                    raise e
+                time.sleep(0.1)
