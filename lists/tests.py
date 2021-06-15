@@ -87,7 +87,9 @@ class NewItemTest(TestCase):
         correct_list = List.objects.create()
 
         correct_item_text = "A new item for an existing list"
-        self.client.post(f"/lists/{correct_list.id}/add_item", data={"item_text": correct_item_text})
+        self.client.post(
+            f"/lists/{correct_list.id}/add_item", data={"item_text": correct_item_text}
+        )
 
         self.assertEqual(1, Item.objects.count())
         new_item = Item.objects.first()
@@ -98,8 +100,8 @@ class NewItemTest(TestCase):
         List.objects.create()  # Other list
         correct_list = List.objects.create()
 
-        response = self.client.post(f"/lists/{correct_list.id}/add_item", data={"item_text": "irrelevant text"})
+        response = self.client.post(
+            f"/lists/{correct_list.id}/add_item", data={"item_text": "irrelevant text"}
+        )
 
         self.assertRedirects(response, f"/lists/{correct_list.id}/")
-
-

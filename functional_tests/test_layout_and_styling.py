@@ -9,10 +9,14 @@ class LayoutAndStylingTest(FunctionalTest):
 
         # She notices the input box is nicely centered
         input_box = self.browser.find_element_by_id("id_new_item")
-        self.assertAlmostEqual(512, input_box.location["x"] + input_box.size["width"] / 2, delta=10)
+        self.assertAlmostEqual(
+            512, input_box.location["x"] + input_box.size["width"] / 2, delta=10
+        )
 
         # She starts a new list and the input box is nicely centered there too
         self._send_input("testing")
         self._wait_for_row_in_list_table("1: testing")
         input_box = self.browser.find_element_by_id("id_new_item")
-        self.assertAlmostEqual(512, input_box.location["x"] + input_box.size["width"] / 2, delta=10)
+        self.assertAlmostEqual(
+            512, input_box.location["x"] + input_box.size["width"] / 2, delta=10
+        )
