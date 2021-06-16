@@ -1,4 +1,6 @@
 from django.test import TestCase
+from django.utils.html import escape
+
 from lists.models import Item, List
 
 
@@ -50,6 +52,18 @@ class NewListTest(TestCase):
         response = self.client.post("/lists/new", data={"item_text": "The item text"})
         new_list = List.objects.first()
         self.assertRedirects(response, f"/lists/{new_list.id}/")
+
+    def test_validation_errors_are_sent_back_to_homepage_template(self):
+        response = self.client.post("/lists/new", data={"item_text": ""})
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, "home.html")
+        self.assertContains(response, escape("You can't have an empty list item"))
+
+    def test_invalid_list_items_are_not_saved(self):
+        self.client.post("/lists/new", data={"item_text": ""})
+        self.assertEqual(0, List.objects.count())
+        self.assertEqual(0, Item.objects.count())
+
 
 
 class NewItemTest(TestCase):
