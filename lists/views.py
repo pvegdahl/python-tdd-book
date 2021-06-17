@@ -10,6 +10,9 @@ def home_page(request: HttpRequest) -> HttpResponse:
 
 def view_list(request: HttpRequest, list_id: str) -> HttpResponse:
     list_ = List.objects.get(id=list_id)
+    if request.method == "POST":
+        Item.objects.create(text=request.POST["item_text"], list=list_)
+        return redirect(f"/lists/{list_.id}/")
     return render(request, "list.html", {"list": list_})
 
 
@@ -23,9 +26,3 @@ def new_list(request: HttpRequest) -> HttpResponse:
         the_new_list.delete()
         return render(request, "home.html", {"error": "You can't have an empty list item"})
     return redirect(f"/lists/{the_new_list.id}/")
-
-
-def add_item(request: HttpRequest, list_id: str) -> HttpResponse:
-    list_ = List.objects.get(id=list_id)
-    Item.objects.create(text=request.POST["item_text"], list=list_)
-    return redirect(f"/lists/{list_.id}/")
