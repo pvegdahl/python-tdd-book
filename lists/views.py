@@ -31,5 +31,7 @@ def new_list(request: HttpRequest) -> HttpResponse:
         item.save()
     except ValidationError:
         the_new_list.delete()
-        return render(request, "home.html", {"error": "You can't have an empty list item"})
+        return render(
+            request, "home.html", {"error": "You can't have an empty list item"}
+        )
     return redirect(the_new_list)
