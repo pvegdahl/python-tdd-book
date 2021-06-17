@@ -23,6 +23,7 @@ class ItemValidationTest(FunctionalTest):
 
         # Which is correctable via adding input text
         self._send_input("Make test pass")
+        self._wait_for_row_in_list_table("2: Make test pass")
         self._send_input("Refactor")
         self._wait_for_row_in_list_table("1: Write test")
         self._wait_for_row_in_list_table("2: Make test pass")
