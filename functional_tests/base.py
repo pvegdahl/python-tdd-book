@@ -36,9 +36,12 @@ class FunctionalTest(StaticLiveServerTestCase):
         )
 
     def _send_input(self, input_text: str) -> None:
-        input_box = self.browser.find_element_by_id("id_new_item")
+        input_box = self._get_input_box()
         input_box.send_keys(input_text)
         input_box.send_keys(Keys.ENTER)
+
+    def _get_input_box(self):
+        return self.browser.find_element_by_id("id_text")
 
     @staticmethod
     def _wait_for(fn, timeout: int = 5):

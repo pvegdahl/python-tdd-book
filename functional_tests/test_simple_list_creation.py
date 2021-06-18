@@ -14,8 +14,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn("To-Do", header_text)
 
         # The user is invited to enter a to-do immediately
-        input_box = self.browser.find_element_by_id("id_new_item")
-        self.assertEqual("Enter a to-do item", input_box.get_attribute("placeholder"))
+        self.assertEqual("Enter a to-do item", self._get_input_box().get_attribute("placeholder"))
 
         # She enters "Buy peacock feathers" into a text box
         # She hits enter, the page updates, and now lists:
