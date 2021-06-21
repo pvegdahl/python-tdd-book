@@ -12,28 +12,22 @@ def home_page(request: HttpRequest) -> HttpResponse:
 
 def view_list(request: HttpRequest, list_id: str) -> HttpResponse:
     the_list = List.objects.get(id=list_id)
-    error = None
-
+    form = ItemForm()
     if request.method == "POST":
-        item = Item(text=(request.POST["text"]), list=the_list)
-        try:
-            item.full_clean()
-            item.save()
+        form = ItemForm(data=request.POST)
+        if form.is_valid():
+            Item.objects.create(text=(request.POST["text"]), list=the_list)
             return redirect(the_list)
-        except ValidationError:
-            error = "You can't have an empty list item"
-    return render(request, "list.html", {"list": the_list, "error": error})
+    return render(request, "list.html", {"list": the_list, "form": form})
 
 
 def new_list(request: HttpRequest) -> HttpResponse:
-    the_new_list = List.objects.create()
-    item = Item(text=(request.POST["text"]), list=the_new_list)
-    try:
-        item.full_clean()
-        item.save()
-    except ValidationError:
-        the_new_list.delete()
+    form = ItemForm(data=request.POST)
+    if form.is_valid():
+        the_new_list = List.objects.create()
+        item = Item.objects.create(text=(request.POST["text"]), list=the_new_list)
+        return redirect(the_new_list)
+    else:
         return render(
-            request, "home.html", {"error": "You can't have an empty list item"}
+            request, "home.html", {"form": form}
         )
-    return redirect(the_new_list)
