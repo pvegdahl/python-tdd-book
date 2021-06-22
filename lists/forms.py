@@ -1,6 +1,6 @@
 from django import forms
 
-from lists.models import Item
+from lists.models import Item, List
 
 EMPTY_ITEM_ERROR = "You can't have an empty list item"
 
@@ -18,3 +18,8 @@ class ItemForm(forms.ModelForm):
             )
         }
         error_messages = {"text": {"required": EMPTY_ITEM_ERROR}}
+
+    # noinspection PyMethodOverriding
+    def save(self, for_list: List):
+        self.instance.list = for_list
+        return super().save()
