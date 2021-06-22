@@ -16,7 +16,7 @@ def view_list(request: HttpRequest, list_id: str) -> HttpResponse:
     if request.method == "POST":
         form = ItemForm(data=request.POST)
         if form.is_valid():
-            Item.objects.create(text=(request.POST["text"]), list=the_list)
+            form.save(for_list=the_list)
             return redirect(the_list)
     return render(request, "list.html", {"list": the_list, "form": form})
 
@@ -25,7 +25,7 @@ def new_list(request: HttpRequest) -> HttpResponse:
     form = ItemForm(data=request.POST)
     if form.is_valid():
         the_new_list = List.objects.create()
-        item = Item.objects.create(text=(request.POST["text"]), list=the_new_list)
+        form.save(for_list=the_new_list)
         return redirect(the_new_list)
     else:
         return render(
