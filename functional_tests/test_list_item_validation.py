@@ -39,10 +39,25 @@ class ItemValidationTest(FunctionalTest):
         self._wait_for_row_in_list_table("2: Make test pass")
         self._wait_for_row_in_list_table("3: Refactor")
 
-    def _assert_error_message(self):
+    def test_cannot_add_duplicate_items(self):
+        # Go to the home page and start a new list
+        self.browser.get(self.live_server_url)
+        input_text = "Not so unique input"
+        self._send_input(input_text)
+        self._wait_for_row_in_list_table(f"1: {input_text}")
+
+        # Attempt to add a duplicate item
+        self._send_input(input_text)
+
+        # See a helpful error message
+        self._assert_error_message_for_duplicates()
+        self._wait_for_row_in_list_table(f"1: {input_text}")
+        self.assertNotIn(f"2: {input_text}", [row.text for row in self.browser.find_element_by_id("id_list_table").find_elements_by_tag_name("tr")])
+
+    def _assert_error_message_for_duplicates(self):
         self._wait_for(
             lambda: self.assertEqual(
-                "You can't have an empty list item",
+                "You've already got this in your list",
                 self.browser.find_element_by_css_selector(".has-error").text,
             )
         )
