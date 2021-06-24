@@ -1,6 +1,11 @@
 from django.test import TestCase
 
-from lists.forms import ItemForm, EMPTY_ITEM_ERROR
+from lists.forms import (
+    ItemForm,
+    EMPTY_ITEM_ERROR,
+    ExistingListItemForm,
+    DUPLICATE_ITEM_ERROR,
+)
 from lists.models import List, Item
 
 
@@ -25,3 +30,24 @@ class ItemFormTest(TestCase):
         self.assertEqual(new_item, Item.objects.first())
         self.assertEqual("valid text", new_item.text)
         self.assertEqual(the_list, new_item.list)
+
+
+class ExistingListItemFormTest(TestCase):
+    def test_form_renders_item_text_input(self):
+        the_list = List.objects.create()
+        form = ExistingListItemForm(for_list=the_list)
+        self.assertIn('placeholder="Enter a to-do item"', form.as_p())
+
+    def test_form_validation_for_blank_items(self):
+        the_list = List.objects.create()
+        form = ExistingListItemForm(for_list=the_list, data={"text": ""})
+        self.assertFalse(form.is_valid())
+        self.assertEqual([EMPTY_ITEM_ERROR], form.errors["text"])
+
+    def test_form_validation_for_duplicate_items(self):
+        the_list = List.objects.create()
+        duplicate_text = "Twins!"
+        Item.objects.create(list=the_list, text=duplicate_text)
+        form = ExistingListItemForm(for_list=the_list, data={"text": duplicate_text})
+        self.assertFalse(form.is_valid())
+        self.assertEqual([DUPLICATE_ITEM_ERROR], form.errors["text"])
