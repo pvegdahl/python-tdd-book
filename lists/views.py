@@ -28,6 +28,4 @@ def new_list(request: HttpRequest) -> HttpResponse:
         form.save(for_list=the_new_list)
         return redirect(the_new_list)
     else:
-        return render(
-            request, "home.html", {"form": form}
-        )
+        return render(request, "home.html", {"form": form})

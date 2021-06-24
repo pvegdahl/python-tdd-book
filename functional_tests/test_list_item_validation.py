@@ -11,11 +11,15 @@ class ItemValidationTest(FunctionalTest):
         self._get_input_box().send_keys(Keys.ENTER)
 
         # the browser intercepts the request, and does not load the list page
-        self._wait_for(lambda: self.browser.find_element_by_css_selector("#id_text:invalid"))
+        self._wait_for(
+            lambda: self.browser.find_element_by_css_selector("#id_text:invalid")
+        )
 
         # The user starts typing, and the error disappears
         self._get_input_box().send_keys("Write test")
-        self._wait_for(lambda: self.browser.find_element_by_css_selector("#id_text:valid"))
+        self._wait_for(
+            lambda: self.browser.find_element_by_css_selector("#id_text:valid")
+        )
 
         # And the user can submit it successfully
         self._get_input_box().send_keys(Keys.ENTER)
@@ -26,11 +30,15 @@ class ItemValidationTest(FunctionalTest):
 
         # And again the browser will not comply
         self._wait_for_row_in_list_table("1: Write test")
-        self._wait_for(lambda: self.browser.find_element_by_css_selector("#id_text:invalid"))
+        self._wait_for(
+            lambda: self.browser.find_element_by_css_selector("#id_text:invalid")
+        )
 
         # Which is correctable via adding input text
         self._get_input_box().send_keys("Make test pass")
-        self._wait_for(lambda: self.browser.find_element_by_css_selector("#id_text:valid"))
+        self._wait_for(
+            lambda: self.browser.find_element_by_css_selector("#id_text:valid")
+        )
 
         self._get_input_box().send_keys(Keys.ENTER)
         self._wait_for_row_in_list_table("2: Make test pass")
@@ -52,7 +60,15 @@ class ItemValidationTest(FunctionalTest):
         # See a helpful error message
         self._assert_error_message_for_duplicates()
         self._wait_for_row_in_list_table(f"1: {input_text}")
-        self.assertNotIn(f"2: {input_text}", [row.text for row in self.browser.find_element_by_id("id_list_table").find_elements_by_tag_name("tr")])
+        self.assertNotIn(
+            f"2: {input_text}",
+            [
+                row.text
+                for row in self.browser.find_element_by_id(
+                    "id_list_table"
+                ).find_elements_by_tag_name("tr")
+            ],
+        )
 
     def _assert_error_message_for_duplicates(self):
         self._wait_for(

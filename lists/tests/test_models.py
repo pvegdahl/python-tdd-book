@@ -57,4 +57,3 @@ class ListModelTest(TestCase):
     def test_get_absolute_url(self):
         the_list = List.objects.create()
         self.assertEqual(f"/lists/{the_list.id}/", the_list.get_absolute_url())
-

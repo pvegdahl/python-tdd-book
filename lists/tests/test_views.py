@@ -51,9 +51,7 @@ class ListViewTest(TestCase):
         correct_list = List.objects.create()
 
         correct_item_text = "A new item for an existing list"
-        self.client.post(
-            f"/lists/{correct_list.id}/", data={"text": correct_item_text}
-        )
+        self.client.post(f"/lists/{correct_list.id}/", data={"text": correct_item_text})
 
         self.assertEqual(1, Item.objects.count())
         new_item = Item.objects.first()
@@ -102,7 +100,9 @@ class ListViewTest(TestCase):
         list_1 = List.objects.create()
         duplicate_text = "knock knock"
         item_1 = Item.objects.create(list=list_1, text=duplicate_text)
-        response = self.client.post(f"/lists/{list_1.id}/", data={"text": duplicate_text})
+        response = self.client.post(
+            f"/lists/{list_1.id}/", data={"text": duplicate_text}
+        )
 
         expected_error = escape("You've already got this in your list")
         self.assertContains(response, expected_error)
