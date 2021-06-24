@@ -3,7 +3,7 @@ from django.test import TestCase
 from lists.models import Item, List
 
 
-class ListAndItemModelTest(TestCase):
+class ItemModelTest(TestCase):
     def test_default_text(self):
         self.assertEqual("", Item().text)
 
@@ -21,10 +21,6 @@ class ListAndItemModelTest(TestCase):
         with self.assertRaises(ValidationError):
             item.save()
             item.full_clean()
-
-    def test_get_absolute_url(self):
-        the_list = List.objects.create()
-        self.assertEqual(f"/lists/{the_list.id}/", the_list.get_absolute_url())
 
     def test_duplicate_items_are_invalid(self):
         the_list = List.objects.create()
@@ -55,4 +51,10 @@ class ListAndItemModelTest(TestCase):
         text = "some text"
         item = Item(text=text)
         self.assertEqual(text, str(item))
+
+
+class ListModelTest(TestCase):
+    def test_get_absolute_url(self):
+        the_list = List.objects.create()
+        self.assertEqual(f"/lists/{the_list.id}/", the_list.get_absolute_url())
 
