@@ -10,5 +10,4 @@ Functional tests can be run against a live, deployed environment with:
 
 Deployments are performed with:
 
-  $ cd deploy_tools/
-  $ fab deploy:host=username@your.web.address
+  $ fab -f deploy_tools/fabfile.py deploy:host=username@your.web.address
