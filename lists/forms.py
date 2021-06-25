@@ -38,3 +38,7 @@ class ExistingListItemForm(ItemForm):
         except ValidationError as e:
             e.error_dict = {"text": [DUPLICATE_ITEM_ERROR]}
             self._update_errors(e)
+
+    # noinspection PyMethodOverriding
+    def save(self):
+        return forms.ModelForm.save(self)
