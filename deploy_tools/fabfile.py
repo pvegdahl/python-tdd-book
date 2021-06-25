@@ -1,6 +1,7 @@
 from django.core.management.utils import get_random_secret_key
 from fabric.api import env, run, cd, local
 from fabric.contrib.files import append, exists
+from fabric.operations import sudo
 
 REPO_URL = "https://github.com/pvegdahl/python-tdd-book.git"
 
@@ -14,6 +15,7 @@ def deploy():
         _create_or_update_dotenv()
         _update_static_files()
         _update_database()
+        _restart_guinicorn()
 
 
 def _get_latest_source():
@@ -45,3 +47,7 @@ def _update_static_files():
 
 def _update_database():
     run("./virtualenv/bin/python manage.py migrate --noinput")
+
+
+def _restart_guinicorn():
+    sudo(f"systemctl restart gunicorn-{env.host}")
