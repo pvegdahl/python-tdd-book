@@ -74,9 +74,12 @@ class ItemValidationTest(FunctionalTest):
         self._wait_for(
             lambda: self.assertEqual(
                 "You've already got this in your list",
-                self.browser.find_element_by_css_selector(".has-error").text,
+                self._get_error_element().text,
             )
         )
+
+    def _get_error_element(self):
+        return self.browser.find_element_by_css_selector(".has-error")
 
     def test_error_messages_are_cleared_on_input(self):
         # Start a list and cause a dup validation error
@@ -86,10 +89,10 @@ class ItemValidationTest(FunctionalTest):
         self._wait_for_row_in_list_table(f"1: {duplicate_text}")
         self._send_input(duplicate_text)
 
-        self._wait_for(lambda: self.assertTrue(self.browser.find_element_by_css_selector(".has-error").is_displayed()))
+        self._wait_for(lambda: self.assertTrue(self._get_error_element().is_displayed()))
 
         # Typing in the input box clears the error
         self._get_input_box().send_keys("a")
 
-        self._wait_for(lambda: self.assertFalse(self.browser.find_element_by_css_selector(".has-error").is_displayed()))
+        self._wait_for(lambda: self.assertFalse(self._get_error_element().is_displayed()))
 
