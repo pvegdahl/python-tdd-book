@@ -77,3 +77,19 @@ class ItemValidationTest(FunctionalTest):
                 self.browser.find_element_by_css_selector(".has-error").text,
             )
         )
+
+    def test_error_messages_are_cleared_on_input(self):
+        # Start a list and cause a dup validation error
+        self.browser.get(self.live_server_url)
+        duplicate_text = "Banter too thick"
+        self._send_input(duplicate_text)
+        self._wait_for_row_in_list_table(f"1: {duplicate_text}")
+        self._send_input(duplicate_text)
+
+        self._wait_for(lambda: self.assertTrue(self.browser.find_element_by_css_selector(".has-error").is_displayed()))
+
+        # Typing in the input box clears the error
+        self._get_input_box().send_keys("a")
+
+        self._wait_for(lambda: self.assertFalse(self.browser.find_element_by_css_selector(".has-error").is_displayed()))
+
