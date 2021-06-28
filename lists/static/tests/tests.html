@@ -20,10 +20,7 @@
     <script src="qunit-2.16.0.js"></script>
     <script>
 
-        console.log("qunit tests start")
-
         QUnit.test("Errors should be hidden on keypress", function (assert) {
-            console.log("In test 1")
             initialize()
             $('input[name="text"]').trigger('keypress');
             assert.equal($(".has-error").is(":visible"), false);
@@ -31,7 +28,6 @@
         });
 
         QUnit.test("Errors aren't hidden without a keypress", function (assert) {
-            console.log("In test 2")
             initialize()
             assert.equal($(".has-error").is(":visible"), true);
 
