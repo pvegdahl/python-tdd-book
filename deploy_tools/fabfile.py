@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.core.management.utils import get_random_secret_key
 from fabric.api import env, run, cd, local
 from fabric.contrib.files import append, exists
@@ -16,6 +18,7 @@ def deploy():
         _update_static_files()
         _update_database()
         _restart_guinicorn()
+        _tag_deploy_in_git()
 
 
 def _get_latest_source():
@@ -51,3 +54,11 @@ def _update_database():
 
 def _restart_guinicorn():
     sudo(f"systemctl restart gunicorn-{env.host}")
+
+
+def _tag_deploy_in_git():
+    if "prod" in env.host:
+        tag = f'DEPLOYED={datetime.now().strftime(format="%Y-%m-%d/%H%M")}'
+        local(f"git tag {tag}")
+        local(f"git push origin {tag}")
+
