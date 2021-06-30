@@ -17,5 +17,9 @@ class SendLoginEmailViewTest(TestCase):
         self.client.post("/accounts/send_login_email", data={"email": EMAIL})
 
         self.assertTrue(mock_send_mail.called)
-        mock_send_mail.assert_called_once_with(subject="Your login link for Superlists", message=mock.ANY, from_email="noreply@superlists", recipient_list=[EMAIL])
-
+        mock_send_mail.assert_called_once_with(
+            subject="Your login link for Superlists",
+            message=mock.ANY,
+            from_email="noreply@superlists",
+            recipient_list=[EMAIL],
+        )

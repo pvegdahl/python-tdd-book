@@ -18,7 +18,11 @@ class LoginTest(FunctionalTest):
         self.browser.find_element_by_name("email").send_keys(Keys.ENTER)
 
         # A message appears telling the user an email has been sent
-        self._wait_for(lambda: self.assertIn("Check your email", self.browser.find_element_by_tag_name("body").text))
+        self._wait_for(
+            lambda: self.assertIn(
+                "Check your email", self.browser.find_element_by_tag_name("body").text
+            )
+        )
 
         # Check email and find a message
         email = mail.outbox[0]
@@ -40,5 +44,3 @@ class LoginTest(FunctionalTest):
         self._wait_for(lambda: self.browser.find_element_by_link_text("Log out"))
         navbar = self.browser.find_element_by_css_selector(".navbar")
         self.assertIn(TEST_EMAIL, navbar.text)
-
-

@@ -61,4 +61,3 @@ def _tag_deploy_in_git():
         tag = f'DEPLOYED={datetime.now().strftime(format="%Y-%m-%d/%H%M")}'
         local(f"git tag {tag}")
         local(f"git push origin {tag}")
-
