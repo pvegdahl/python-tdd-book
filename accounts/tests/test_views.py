@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
+from accounts.views import EMAIL_SUBJECT
 
 EMAIL = "someone@somewhere.com"
 
@@ -18,7 +19,7 @@ class SendLoginEmailViewTest(TestCase):
 
         self.assertTrue(mock_send_mail.called)
         mock_send_mail.assert_called_once_with(
-            subject="Your login link for Superlists",
+            subject=EMAIL_SUBJECT,
             message=mock.ANY,
             from_email="noreply@superlists",
             recipient_list=[EMAIL],
