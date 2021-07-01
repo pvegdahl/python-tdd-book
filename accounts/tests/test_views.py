@@ -26,7 +26,9 @@ class SendLoginEmailViewTest(TestCase):
         )
 
     def test_adds_success_message(self):
-        response = self.client.post("/accounts/send_login_email", data={"email": EMAIL}, follow=True)
+        response = self.client.post(
+            "/accounts/send_login_email", data={"email": EMAIL}, follow=True
+        )
 
         message = list(response.context["messages"])[0]
         self.assertEqual(message.message, SUCCESS_MESSAGE)
@@ -41,7 +43,9 @@ class SendLoginEmailViewTest(TestCase):
         self.client.post("/accounts/send_login_email", data={"email": EMAIL})
 
         # noinspection HttpUrlsUsage
-        expected_url = f"http://testserver/accounts/login?token={Token.objects.first().uid}"
+        expected_url = (
+            f"http://testserver/accounts/login?token={Token.objects.first().uid}"
+        )
         self.assertIn(expected_url, mock_send_mail.call_args.kwargs["message"])
 
 
