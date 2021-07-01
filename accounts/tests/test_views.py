@@ -31,3 +31,9 @@ class SendLoginEmailViewTest(TestCase):
         message = list(response.context["messages"])[0]
         self.assertEqual(message.message, SUCCESS_MESSAGE)
         self.assertEqual(message.tags, "success")
+
+
+class LoginViewTest(TestCase):
+    def test_redirects_to_home_page(self):
+        response = self.client.get("/accounts/login?token=abcd123")
+        self.assertRedirects(response, "/")

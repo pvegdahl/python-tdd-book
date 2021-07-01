@@ -11,9 +11,13 @@ def send_login_email(request):
     email = request.POST["email"]
     send_mail(
         subject=EMAIL_SUBJECT,
-        message="TBD",
+        message="Use this link to log in",
         from_email="noreply@superlists",
         recipient_list=[email],
     )
     messages.success(request, SUCCESS_MESSAGE)
+    return redirect("/")
+
+
+def login(request):
     return redirect("/")
