@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
-from accounts.views import EMAIL_SUBJECT
+from accounts.views import EMAIL_SUBJECT, SUCCESS_MESSAGE
 
 EMAIL = "someone@somewhere.com"
 
@@ -24,3 +24,10 @@ class SendLoginEmailViewTest(TestCase):
             from_email="noreply@superlists",
             recipient_list=[EMAIL],
         )
+
+    def test_adds_success_message(self):
+        response = self.client.post("/accounts/send_login_email", data={"email": EMAIL}, follow=True)
+
+        message = list(response.context["messages"])[0]
+        self.assertEqual(message.message, SUCCESS_MESSAGE)
+        self.assertEqual(message.tags, "success")
