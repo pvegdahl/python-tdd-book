@@ -25,5 +25,5 @@ urlpatterns = [
     url(r"^$", list_views.home_page, name="home"),
     url(r"^lists/", include(list_urls)),
     url(r"^accounts/", include(accounts_urls)),
-    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/images/favicon.ico')),
+    url(r"^favicon\.ico$", RedirectView.as_view(url="/static/images/favicon.ico")),
 ]

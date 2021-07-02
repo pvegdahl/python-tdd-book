@@ -65,7 +65,9 @@ class LoginViewTest(TestCase):
 
     def test_calls_auth_login_with_user_if_there_is_one(self, mock_auth):
         response = self.client.get(f"/accounts/login?token={self.uid}")
-        mock_auth.login.assert_called_once_with(response.wsgi_request, mock_auth.authenticate.return_value)
+        mock_auth.login.assert_called_once_with(
+            response.wsgi_request, mock_auth.authenticate.return_value
+        )
 
     def test_does_not_log_in_if_user_is_not_authenticated(self, mock_auth):
         mock_auth.authenticate.return_value = None

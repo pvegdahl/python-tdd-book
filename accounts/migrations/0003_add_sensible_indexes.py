@@ -9,22 +9,24 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0002_token'),
+        ("accounts", "0002_token"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='token',
-            name='id',
+            model_name="token",
+            name="id",
         ),
         migrations.AlterField(
-            model_name='token',
-            name='email',
+            model_name="token",
+            name="email",
             field=models.EmailField(db_index=True, max_length=254),
         ),
         migrations.AlterField(
-            model_name='token',
-            name='uid',
-            field=models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False),
+            model_name="token",
+            name="uid",
+            field=models.UUIDField(
+                default=uuid.uuid4, primary_key=True, serialize=False
+            ),
         ),
     ]

@@ -10,7 +10,9 @@ EMAIL = "bob@loblaw.com"
 
 class AuthenticationTest(TestCase):
     def test_returns_None_if_no_such_token(self):
-        self.assertIsNone(PasswordlessAuthenticationBackend().authenticate(uuid.uuid4()))
+        self.assertIsNone(
+            PasswordlessAuthenticationBackend().authenticate(uuid.uuid4())
+        )
 
     def test_returns_new_user(self):
         token = Token.objects.create(email=EMAIL)
