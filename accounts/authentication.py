@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from accounts.models import Token, User
@@ -5,7 +6,7 @@ from accounts.models import Token, User
 
 class PasswordlessAuthenticationBackend:
     @staticmethod
-    def authenticate(uid: UUID):
+    def authenticate(uid: UUID) -> Optional[User]:
         try:
             token = Token.objects.get(uid=uid)
             return User.objects.get(email=token.email)
@@ -16,7 +17,7 @@ class PasswordlessAuthenticationBackend:
             return User.objects.create(email=token.email)
 
     @staticmethod
-    def get_user(email: str) -> User:
+    def get_user(email: str) -> Optional[User]:
         try:
             return User.objects.get(email=email)
         except User.DoesNotExist:
