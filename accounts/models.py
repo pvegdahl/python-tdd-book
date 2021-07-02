@@ -12,5 +12,5 @@ class User(models.Model):
 
 
 class Token(models.Model):
-    email = models.EmailField()
-    uid = models.UUIDField(default=uuid.uuid4)
+    email = models.EmailField(db_index=True)
+    uid = models.UUIDField(default=uuid.uuid4, primary_key=True)
