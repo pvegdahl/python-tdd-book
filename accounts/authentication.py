@@ -14,3 +14,10 @@ class PasswordlessAuthenticationBackend:
         except User.DoesNotExist:
             # noinspection PyUnboundLocalVariable
             return User.objects.create(email=token.email)
+
+    @staticmethod
+    def get_user(email: str) -> User:
+        try:
+            return User.objects.get(email=email)
+        except User.DoesNotExist:
+            return None
