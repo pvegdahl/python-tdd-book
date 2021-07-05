@@ -148,3 +148,5 @@ LOGGING = {
     },
     "root": {"level": "INFO"},
 }
+
+SESSION_COOKIE_NAME = "sessionid"
