@@ -89,9 +89,7 @@ class ItemValidationTest(FunctionalTest):
         self.wait_for_row_in_list_table(f"1: {duplicate_text}")
         self.send_input(duplicate_text)
 
-        self.wait_for(
-            lambda: self.assertTrue(self._get_error_element().is_displayed())
-        )
+        self.wait_for(lambda: self.assertTrue(self._get_error_element().is_displayed()))
 
         # Typing in the input box clears the error
         self.get_input_box().send_keys("a")

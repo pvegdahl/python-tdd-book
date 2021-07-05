@@ -60,4 +60,6 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def wait_to_be_logged_out(self, email: str):
         self.wait_for(lambda: self.browser.find_element_by_name("email"))
-        self.assertNotIn(email, self.browser.find_element_by_css_selector(".navbar").text)
+        self.assertNotIn(
+            email, self.browser.find_element_by_css_selector(".navbar").text
+        )
