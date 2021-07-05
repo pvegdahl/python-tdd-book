@@ -7,6 +7,21 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 
 
+def wait(fn):
+    max_wait = 5
+
+    def modified_fn(*args, **kwargs):
+        start_time = time.time()
+        while True:
+            try:
+                return fn(*args, **kwargs)
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > max_wait:
+                    raise e
+                time.sleep(0.1)
+    return modified_fn
+
+
 class FunctionalTest(StaticLiveServerTestCase):
     def setUp(self) -> None:
         self.browser = webdriver.Firefox()
@@ -19,20 +34,18 @@ class FunctionalTest(StaticLiveServerTestCase):
         # Satisfied, everyone goes back to sleep
         self.browser.quit()
 
-    def wait_for_row_in_list_table(self, row_text: str, timeout: int = 5) -> None:
-        self.wait_for(
-            fn=lambda: self.assertIn(
-                row_text,
-                [
-                    row.text
-                    for row in (
-                        self.browser.find_element_by_id(
-                            "id_list_table"
-                        ).find_elements_by_tag_name("tr")
-                    )
-                ],
-            ),
-            timeout=timeout,
+    @wait
+    def wait_for_row_in_list_table(self, row_text: str) -> None:
+        self.assertIn(
+            row_text,
+            [
+                row.text
+                for row in (
+                    self.browser.find_element_by_id(
+                        "id_list_table"
+                    ).find_elements_by_tag_name("tr")
+                )
+            ],
         )
 
     def send_input(self, input_text: str) -> None:
@@ -44,22 +57,18 @@ class FunctionalTest(StaticLiveServerTestCase):
         return self.browser.find_element_by_id("id_text")
 
     @staticmethod
-    def wait_for(fn, timeout: int = 5):
-        start_time = time.time()
-        while True:
-            try:
-                return fn()
-            except (AssertionError, WebDriverException) as e:
-                if time.time() - start_time > timeout:
-                    raise e
-                time.sleep(0.1)
+    @wait
+    def wait_for(fn):
+        return fn()
 
+    @wait
     def wait_to_be_logged_in(self, email: str):
-        self.wait_for(lambda: self.browser.find_element_by_link_text("Log out"))
+        self.browser.find_element_by_link_text("Log out")
         self.assertIn(email, self.browser.find_element_by_css_selector(".navbar").text)
 
+    @wait
     def wait_to_be_logged_out(self, email: str):
-        self.wait_for(lambda: self.browser.find_element_by_name("email"))
+        self.browser.find_element_by_name("email")
         self.assertNotIn(
             email, self.browser.find_element_by_css_selector(".navbar").text
         )
