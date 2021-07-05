@@ -1,3 +1,4 @@
 selenium
 ipython
 black
+fabric3
