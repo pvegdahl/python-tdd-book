@@ -15,29 +15,29 @@ class NewVisitorTest(FunctionalTest):
 
         # The user is invited to enter a to-do immediately
         self.assertEqual(
-            "Enter a to-do item", self._get_input_box().get_attribute("placeholder")
+            "Enter a to-do item", self.get_input_box().get_attribute("placeholder")
         )
 
         # She enters "Buy peacock feathers" into a text box
         # She hits enter, the page updates, and now lists:
         # "1: Buy peacock feathers" as a to-do list item
-        self._send_input("Buy peacock feathers")
+        self.send_input("Buy peacock feathers")
 
-        self._wait_for_row_in_list_table("1: Buy peacock feathers")
+        self.wait_for_row_in_list_table("1: Buy peacock feathers")
 
         # There is still a text box to enter another item.  She
         # enters "Use peacock feathers to make a fly"
-        self._send_input("Use peacock feathers to make a fly")
+        self.send_input("Use peacock feathers to make a fly")
 
         # The page updates again, and now shows both items
-        self._wait_for_row_in_list_table("1: Buy peacock feathers")
-        self._wait_for_row_in_list_table("2: Use peacock feathers to make a fly")
+        self.wait_for_row_in_list_table("1: Buy peacock feathers")
+        self.wait_for_row_in_list_table("2: Use peacock feathers to make a fly")
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Edith starts a new to-do list
         self.browser.get(self.live_server_url)
-        self._send_input("Buy peacock feathers")
-        self._wait_for_row_in_list_table("1: Buy peacock feathers")
+        self.send_input("Buy peacock feathers")
+        self.wait_for_row_in_list_table("1: Buy peacock feathers")
 
         # She notices that her list has a unique URL
         edith_list_url = self.browser.current_url
@@ -56,8 +56,8 @@ class NewVisitorTest(FunctionalTest):
         self.assertNotIn("make a fly", page_text)
 
         # Francis starts a new list by entering a new item.
-        self._send_input("Buy milk")
-        self._wait_for_row_in_list_table("1: Buy milk")
+        self.send_input("Buy milk")
+        self.wait_for_row_in_list_table("1: Buy milk")
 
         # Francis gets his own URL
         francis_list_url = self.browser.current_url

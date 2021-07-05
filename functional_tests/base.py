@@ -19,8 +19,8 @@ class FunctionalTest(StaticLiveServerTestCase):
         # Satisfied, everyone goes back to sleep
         self.browser.quit()
 
-    def _wait_for_row_in_list_table(self, row_text: str, timeout: int = 5) -> None:
-        self._wait_for(
+    def wait_for_row_in_list_table(self, row_text: str, timeout: int = 5) -> None:
+        self.wait_for(
             fn=lambda: self.assertIn(
                 row_text,
                 [
@@ -35,16 +35,16 @@ class FunctionalTest(StaticLiveServerTestCase):
             timeout=timeout,
         )
 
-    def _send_input(self, input_text: str) -> None:
-        input_box = self._get_input_box()
+    def send_input(self, input_text: str) -> None:
+        input_box = self.get_input_box()
         input_box.send_keys(input_text)
         input_box.send_keys(Keys.ENTER)
 
-    def _get_input_box(self):
+    def get_input_box(self):
         return self.browser.find_element_by_id("id_text")
 
     @staticmethod
-    def _wait_for(fn, timeout: int = 5):
+    def wait_for(fn, timeout: int = 5):
         start_time = time.time()
         while True:
             try:
@@ -55,9 +55,9 @@ class FunctionalTest(StaticLiveServerTestCase):
                 time.sleep(0.1)
 
     def wait_to_be_logged_in(self, email: str):
-        self._wait_for(lambda: self.browser.find_element_by_link_text("Log out"))
+        self.wait_for(lambda: self.browser.find_element_by_link_text("Log out"))
         self.assertIn(email, self.browser.find_element_by_css_selector(".navbar").text)
 
     def wait_to_be_logged_out(self, email: str):
-        self._wait_for(lambda: self.browser.find_element_by_name("email"))
+        self.wait_for(lambda: self.browser.find_element_by_name("email"))
         self.assertNotIn(email, self.browser.find_element_by_css_selector(".navbar").text)
