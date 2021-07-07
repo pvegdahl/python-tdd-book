@@ -1,4 +1,4 @@
-from functional_tests.base import FunctionalTest
+from functional_tests.base import FunctionalTest, wait
 
 
 class LayoutAndStylingTest(FunctionalTest):
@@ -8,15 +8,17 @@ class LayoutAndStylingTest(FunctionalTest):
         self.browser.set_window_size(1024, 768)
 
         # She notices the input box is nicely centered
-        input_box = self.get_input_box()
-        self.assertAlmostEqual(
-            512, input_box.location["x"] + input_box.size["width"] / 2, delta=10
-        )
+        self._assert_input_box_is_centered()
 
         # She starts a new list and the input box is nicely centered there too
         self.add_list_item("testing")
         self.wait_for_row_in_list_table("1: testing")
-        input_box = self.get_input_box()
+        self._assert_input_box_is_centered()
+
+    @wait
+    def _assert_input_box_is_centered(self):
         self.assertAlmostEqual(
-            512, input_box.location["x"] + input_box.size["width"] / 2, delta=10
+            512,
+            self.get_input_box().location["x"] + self.get_input_box().size["width"] / 2,
+            delta=10,
         )
