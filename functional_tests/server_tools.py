@@ -2,11 +2,6 @@ from fabric.context_managers import settings, shell_env
 from fabric.api import run
 
 
-# def reset_database(user: str, host: str):
-#     with settings(host_string=f"{user}@{host}"):
-#         run(f"{_get_manage_dot_py(host=host)} flush --noinput")
-
-
 def create_session_on_server(user: str, host: str, email: str):
     with settings(host_string=f"{user}@{host}"):
         with shell_env(**(_get_server_env_vars(host=host))):
