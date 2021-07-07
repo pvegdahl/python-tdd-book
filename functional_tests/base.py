@@ -19,6 +19,7 @@ def wait(fn):
                 if time.time() - start_time > max_wait:
                     raise e
                 time.sleep(0.1)
+
     return modified_fn
 
 
@@ -49,7 +50,9 @@ class FunctionalTest(StaticLiveServerTestCase):
         )
 
     def add_list_item(self, input_text: str, validate: bool = True) -> None:
-        item_number = len(self.browser.find_elements_by_css_selector("#id_list_table tr")) + 1
+        item_number = (
+            len(self.browser.find_elements_by_css_selector("#id_list_table tr")) + 1
+        )
         self.get_input_box().send_keys(input_text)
         self.get_input_box().send_keys(Keys.ENTER)
         if validate:

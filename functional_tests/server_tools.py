@@ -5,7 +5,9 @@ from fabric.api import run
 def create_session_on_server(user: str, host: str, email: str):
     with settings(host_string=f"{user}@{host}"):
         with shell_env(**(_get_server_env_vars(host=host))):
-            return run(f"{_get_manage_dot_py(host=host)} create_session {email}").strip()
+            return run(
+                f"{_get_manage_dot_py(host=host)} create_session {email}"
+            ).strip()
 
 
 def _get_server_env_vars(host: str):

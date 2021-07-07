@@ -72,7 +72,9 @@ class ItemValidationTest(FunctionalTest):
 
     @wait
     def _assert_error_message_for_duplicates(self):
-        self.assertEqual("You've already got this in your list", self._get_error_element().text)
+        self.assertEqual(
+            "You've already got this in your list", self._get_error_element().text
+        )
 
     def _get_error_element(self):
         return self.browser.find_element_by_css_selector(".has-error")
