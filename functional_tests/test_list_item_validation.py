@@ -55,7 +55,7 @@ class ItemValidationTest(FunctionalTest):
         self.wait_for_row_in_list_table(f"1: {input_text}")
 
         # Attempt to add a duplicate item
-        self.add_list_item(input_text)
+        self.add_list_item(input_text, validate=False)
 
         # See a helpful error message
         self._assert_error_message_for_duplicates()
@@ -83,7 +83,7 @@ class ItemValidationTest(FunctionalTest):
         duplicate_text = "Banter too thick"
         self.add_list_item(duplicate_text)
         self.wait_for_row_in_list_table(f"1: {duplicate_text}")
-        self.add_list_item(duplicate_text)
+        self.add_list_item(duplicate_text, validate=False)
 
         self.wait_for(lambda: self.assertTrue(self._get_error_element().is_displayed()))
 

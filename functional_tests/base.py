@@ -48,10 +48,12 @@ class FunctionalTest(StaticLiveServerTestCase):
             ],
         )
 
-    def add_list_item(self, input_text: str) -> None:
-        input_box = self.get_input_box()
-        input_box.send_keys(input_text)
-        input_box.send_keys(Keys.ENTER)
+    def add_list_item(self, input_text: str, validate: bool = True) -> None:
+        item_number = len(self.browser.find_elements_by_css_selector("#id_list_table tr")) + 1
+        self.get_input_box().send_keys(input_text)
+        self.get_input_box().send_keys(Keys.ENTER)
+        if validate:
+            self.wait_for_row_in_list_table(f"{item_number}: {input_text}")
 
     def get_input_box(self):
         return self.browser.find_element_by_id("id_text")
