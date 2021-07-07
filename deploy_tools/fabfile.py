@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from django.core.management.utils import get_random_secret_key
@@ -42,6 +43,8 @@ def _create_or_update_dotenv():
     current_contents = run("cat .env")
     if "DJANGO_SECRET_KEY" not in current_contents:
         append(".env", f"DJANGO_SECRET_KEY={get_random_secret_key()}")
+    for env_var in ["EMAIL_USER", "EMAIL_PASSWORD"]:
+        append(".env", f"{env_var}={os.environ.get(env_var)}")
 
 
 def _update_static_files():
