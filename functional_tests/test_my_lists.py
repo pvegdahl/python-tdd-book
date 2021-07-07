@@ -36,8 +36,8 @@ class MyListsTest(FunctionalTest):
         # Go to the home page and start a list
         self.browser.get(self.live_server_url)
         item_1 = "Write the test"
-        self.send_input(item_1)
-        self.send_input("Write the code")
+        self.add_list_item(item_1)
+        self.add_list_item("Write the code")
         first_list_url = self.browser.current_url
 
         # The user sees and clicks a "My lists" link
@@ -51,7 +51,7 @@ class MyListsTest(FunctionalTest):
         # Let's add another list
         self.browser.get(self.live_server_url)
         item_2 = "Click cows"
-        self.send_input(item_2)
+        self.add_list_item(item_2)
         second_list_url = self.browser.current_url
 
         # Under "My lists," the new list appears

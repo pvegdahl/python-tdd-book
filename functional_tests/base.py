@@ -48,7 +48,7 @@ class FunctionalTest(StaticLiveServerTestCase):
             ],
         )
 
-    def send_input(self, input_text: str) -> None:
+    def add_list_item(self, input_text: str) -> None:
         input_box = self.get_input_box()
         input_box.send_keys(input_text)
         input_box.send_keys(Keys.ENTER)

@@ -42,7 +42,7 @@ class ItemValidationTest(FunctionalTest):
 
         self.get_input_box().send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("2: Make test pass")
-        self.send_input("Refactor")
+        self.add_list_item("Refactor")
         self.wait_for_row_in_list_table("1: Write test")
         self.wait_for_row_in_list_table("2: Make test pass")
         self.wait_for_row_in_list_table("3: Refactor")
@@ -51,11 +51,11 @@ class ItemValidationTest(FunctionalTest):
         # Go to the home page and start a new list
         self.browser.get(self.live_server_url)
         input_text = "Not so unique input"
-        self.send_input(input_text)
+        self.add_list_item(input_text)
         self.wait_for_row_in_list_table(f"1: {input_text}")
 
         # Attempt to add a duplicate item
-        self.send_input(input_text)
+        self.add_list_item(input_text)
 
         # See a helpful error message
         self._assert_error_message_for_duplicates()
@@ -81,9 +81,9 @@ class ItemValidationTest(FunctionalTest):
         # Start a list and cause a dup validation error
         self.browser.get(self.live_server_url)
         duplicate_text = "Banter too thick"
-        self.send_input(duplicate_text)
+        self.add_list_item(duplicate_text)
         self.wait_for_row_in_list_table(f"1: {duplicate_text}")
-        self.send_input(duplicate_text)
+        self.add_list_item(duplicate_text)
 
         self.wait_for(lambda: self.assertTrue(self._get_error_element().is_displayed()))
 

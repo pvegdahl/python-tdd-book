@@ -14,7 +14,7 @@ class LayoutAndStylingTest(FunctionalTest):
         )
 
         # She starts a new list and the input box is nicely centered there too
-        self.send_input("testing")
+        self.add_list_item("testing")
         self.wait_for_row_in_list_table("1: testing")
         input_box = self.get_input_box()
         self.assertAlmostEqual(

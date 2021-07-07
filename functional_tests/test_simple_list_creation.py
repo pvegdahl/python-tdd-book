@@ -21,13 +21,13 @@ class NewVisitorTest(FunctionalTest):
         # She enters "Buy peacock feathers" into a text box
         # She hits enter, the page updates, and now lists:
         # "1: Buy peacock feathers" as a to-do list item
-        self.send_input("Buy peacock feathers")
+        self.add_list_item("Buy peacock feathers")
 
         self.wait_for_row_in_list_table("1: Buy peacock feathers")
 
         # There is still a text box to enter another item.  She
         # enters "Use peacock feathers to make a fly"
-        self.send_input("Use peacock feathers to make a fly")
+        self.add_list_item("Use peacock feathers to make a fly")
 
         # The page updates again, and now shows both items
         self.wait_for_row_in_list_table("1: Buy peacock feathers")
@@ -36,7 +36,7 @@ class NewVisitorTest(FunctionalTest):
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Edith starts a new to-do list
         self.browser.get(self.live_server_url)
-        self.send_input("Buy peacock feathers")
+        self.add_list_item("Buy peacock feathers")
         self.wait_for_row_in_list_table("1: Buy peacock feathers")
 
         # She notices that her list has a unique URL
@@ -56,7 +56,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertNotIn("make a fly", page_text)
 
         # Francis starts a new list by entering a new item.
-        self.send_input("Buy milk")
+        self.add_list_item("Buy milk")
         self.wait_for_row_in_list_table("1: Buy milk")
 
         # Francis gets his own URL
