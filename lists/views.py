@@ -28,3 +28,7 @@ def new_list(request: HttpRequest) -> HttpResponse:
         return redirect(the_new_list)
     else:
         return render(request, "home.html", {"form": form})
+
+
+def my_lists(request: HttpRequest, email: str) -> HttpResponse:
+    return render(request, "my_lists.html")
