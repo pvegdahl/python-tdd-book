@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.utils.html import escape
 
+from accounts.models import User
 from lists.forms import (
     ItemForm,
     EMPTY_ITEM_ERROR,
@@ -8,6 +9,9 @@ from lists.forms import (
     ExistingListItemForm,
 )
 from lists.models import Item, List
+
+
+EMAIL = "daffy@duck.com"
 
 
 class HomePageTest(TestCase):
@@ -141,8 +145,22 @@ class NewListTest(TestCase):
         response = self.client.post("/lists/new", data={"text": ""})
         self.assertIsInstance(response.context["form"], ItemForm)
 
+    def test_list_owner_is_saved_if_user_is_authenticated(self):
+        user = User.objects.create(email=EMAIL)
+        self.client.force_login(user)
+        self.client.post("/lists/new", data={"text": "the content"})
+        the_list = List.objects.first()
+        self.assertEqual(the_list.owner, user)
+
 
 class MyListsTest(TestCase):
     def test_my_lists_url_renders_my_lists_template(self):
-        response = self.client.get("/lists/users/a@b.com/")
+        User.objects.create(email=EMAIL)
+        response = self.client.get(f"/lists/users/{EMAIL}/")
         self.assertTemplateUsed(response, "my_lists.html")
+
+    def test_passes_correct_owner_to_template(self):
+        User.objects.create(email="wrong@owner.com")
+        correct_user = User.objects.create(email=EMAIL)
+        response = self.client.get(f"/lists/users/{EMAIL}/")
+        self.assertEqual(response.context["owner"], correct_user)
