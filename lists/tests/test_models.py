@@ -66,5 +66,15 @@ class ListModelTest(TestCase):
         self.assertCountEqual([the_list], user.list_set.all())
 
     @staticmethod
-    def _test_owner_is_optional():
+    def test_owner_is_optional():
         List.objects.create()  # Should not raise
+
+    def test_list_name_is_first_item_text(self):
+        first_item_text = "Whatever is on the first item"
+        the_list = List.objects.create()
+        Item.objects.create(text=first_item_text, list=the_list)
+        Item.objects.create(text="Other text", list=the_list)
+        self.assertEqual(the_list.name, first_item_text)
+
+    def test_list_name_is__Empty_List_if_no_items_on_list(self):
+        self.assertEqual("Empty List", List.objects.create().name)

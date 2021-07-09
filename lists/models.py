@@ -10,6 +10,11 @@ class List(models.Model):
     def get_absolute_url(self) -> str:
         return reverse("view_list", args=[self.id])
 
+    @property
+    def name(self) -> str:
+        first_item = self.item_set.first()
+        return first_item.text if first_item else "Empty List"
+
 
 class Item(models.Model):
     text = models.TextField(blank=False, default="")
