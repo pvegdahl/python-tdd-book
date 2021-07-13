@@ -25,7 +25,8 @@ def new_list(request: HttpRequest) -> HttpResponse:
     form = ItemForm(data=request.POST)
     if form.is_valid():
         the_new_list = List()
-        the_new_list.owner = request.user
+        if request.user.is_authenticated:
+            the_new_list.owner = request.user
         the_new_list.save()
         form.save(for_list=the_new_list)
         return redirect(the_new_list)

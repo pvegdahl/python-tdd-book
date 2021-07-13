@@ -1,3 +1,6 @@
+import unittest
+from unittest.mock import patch, Mock
+
 from django.test import TestCase
 
 from lists.forms import (
@@ -5,6 +8,7 @@ from lists.forms import (
     EMPTY_ITEM_ERROR,
     ExistingListItemForm,
     DUPLICATE_ITEM_ERROR,
+    NewListForm,
 )
 from lists.models import List, Item
 
@@ -57,3 +61,38 @@ class ExistingListItemFormTest(TestCase):
         form = ExistingListItemForm(for_list=the_list, data={"text": "hi"})
         new_item = form.save()
         self.assertEqual([new_item], list(Item.objects.all()))
+
+
+class NewListFormTest(unittest.TestCase):
+    @patch("lists.forms.List.create_new")
+    def test_save_creates_new_list_from_post_data_if_user_not_authenticated(
+        self, mock_list_create_new
+    ):
+        user = Mock(is_authenticated=False)
+        input_text = "new item text"
+        form = NewListForm(data={"text": input_text})
+        form.is_valid()
+        form.save(owner=user)
+        mock_list_create_new.assert_called_once_with(first_item_text=input_text)
+
+    @patch("lists.forms.List.create_new")
+    def test_save_creates_new_list_from_post_data_if_user_authenticated(
+        self, mock_list_create_new
+    ):
+        user = Mock(is_authenticated=True)
+        input_text = "another new item text"
+        form = NewListForm(data={"text": input_text})
+        form.is_valid()
+        form.save(owner=user)
+        mock_list_create_new.assert_called_once_with(
+            first_item_text=input_text, owner=user
+        )
+
+    @patch("lists.forms.List.create_new")
+    def test_save_returns_new_list_object(self, mock_list_create_new):
+        user = Mock(is_authenticated=True)
+        input_text = "yet another new item text"
+        form = NewListForm(data={"text": input_text})
+        form.is_valid()
+        result = form.save(owner=user)
+        self.assertEqual(result, mock_list_create_new.return_value)

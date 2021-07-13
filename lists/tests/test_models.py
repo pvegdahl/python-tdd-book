@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+
+from accounts.models import User
 from lists.models import Item, List
 
 
@@ -57,3 +59,27 @@ class ListModelTest(TestCase):
     def test_get_absolute_url(self):
         the_list = List.objects.create()
         self.assertEqual(f"/lists/{the_list.id}/", the_list.get_absolute_url())
+
+    def test_create_new_creates_list_and_first_item(self):
+        item_text = "Some text for the item"
+        List.create_new(first_item_text=item_text)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, item_text)
+        self.assertEqual(List.objects.first(), new_item.list)
+
+    def test_create_new_optionally_saves_owner(self):
+        user = User.objects.create()
+        List.create_new(first_item_text="Text text text", owner=user)
+        self.assertEqual(List.objects.first().owner, user)
+
+    @staticmethod
+    def test_lists_can_have_owners():
+        List(owner=User())  # Should not raise
+
+    @staticmethod
+    def test_list_owners_are_optional():
+        List().full_clean()  # Should not raise
+
+    def test_create_new_returns_list(self):
+        result = List.create_new("the text")
+        self.assertEqual(List.objects.first(), result)

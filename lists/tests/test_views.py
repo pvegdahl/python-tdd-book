@@ -149,7 +149,6 @@ class NewListViewIntegratedTest(TestCase):
         response = self.client.post("/lists/new", data={"text": ""})
         self.assertIsInstance(response.context["form"], ItemForm)
 
-    @unittest.skip
     def test_list_owner_is_saved_if_user_is_authenticated(self):
         user = User.objects.create(email=EMAIL)
         self.client.force_login(user)
@@ -178,7 +177,9 @@ class NewListViewTests(unittest.TestCase):
         mock_form.save.assert_called_once_with(owner=self.request.user)
 
     @patch("lists.views.redirect")
-    def test_redirects_to_form_returned_object_if_valid(self, mock_redirect, mock_new_list_form):
+    def test_redirects_to_form_returned_object_if_valid(
+        self, mock_redirect, mock_new_list_form
+    ):
         mock_form = mock_new_list_form.return_value
         mock_form.is_valid.return_value = True
 
@@ -188,14 +189,18 @@ class NewListViewTests(unittest.TestCase):
         mock_redirect.assert_called_once_with(mock_form.save.return_value)
 
     @patch("lists.views.render")
-    def test_renders_home_page_if_form_is_invalid(self, mock_render, mock_new_list_form):
+    def test_renders_home_page_if_form_is_invalid(
+        self, mock_render, mock_new_list_form
+    ):
         mock_form = mock_new_list_form.return_value
         mock_form.is_valid.return_value = False
 
         response = new_list2(self.request)
 
         self.assertEqual(response, mock_render.return_value)
-        mock_render.assert_called_once_with(self.request, "home.html", {"form": mock_form})
+        mock_render.assert_called_once_with(
+            self.request, "home.html", {"form": mock_form}
+        )
 
     def test_form_does_not_save_if_list_is_invalid(self, mock_new_list_form):
         mock_form = mock_new_list_form.return_value
