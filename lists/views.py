@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 
 from accounts.models import User
-from lists.forms import ItemForm, ExistingListItemForm
+from lists.forms import ItemForm, NewListForm, ExistingListItemForm
 from lists.models import List
 
 
@@ -24,10 +24,19 @@ def view_list(request: HttpRequest, list_id: str) -> HttpResponse:
 def new_list(request: HttpRequest) -> HttpResponse:
     form = ItemForm(data=request.POST)
     if form.is_valid():
-        the_new_list = List.objects.create()
+        the_new_list = List()
         the_new_list.owner = request.user
+        the_new_list.save()
         form.save(for_list=the_new_list)
         return redirect(the_new_list)
+    else:
+        return render(request, "home.html", {"form": form})
+
+
+def new_list2(request: HttpRequest) -> HttpResponse:
+    form = NewListForm(data=request.POST)
+    if form.is_valid():
+        return redirect(form.save(owner=request.user))
     else:
         return render(request, "home.html", {"form": form})
 
