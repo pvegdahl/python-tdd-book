@@ -11,3 +11,5 @@ Functional tests can be run against a live, deployed environment with:
 Deployments are performed with:
 
   $ fab -f deploy_tools/fabfile.py deploy:host=username@your.web.address
+
+The necessary requirements for running the server are in requirements.txt.  Other libraries that are necessary for testing or useful for local development are in dev-requirements.txt.
