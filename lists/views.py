@@ -22,19 +22,6 @@ def view_list(request: HttpRequest, list_id: str) -> HttpResponse:
 
 
 def new_list(request: HttpRequest) -> HttpResponse:
-    form = ItemForm(data=request.POST)
-    if form.is_valid():
-        the_new_list = List()
-        if request.user.is_authenticated:
-            the_new_list.owner = request.user
-        the_new_list.save()
-        form.save(for_list=the_new_list)
-        return redirect(the_new_list)
-    else:
-        return render(request, "home.html", {"form": form})
-
-
-def new_list2(request: HttpRequest) -> HttpResponse:
     form = NewListForm(data=request.POST)
     if form.is_valid():
         return redirect(form.save(owner=request.user))

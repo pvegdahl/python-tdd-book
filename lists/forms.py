@@ -22,13 +22,9 @@ class ItemForm(forms.ModelForm):
         }
         error_messages = {"text": {"required": EMPTY_ITEM_ERROR}}
 
-    # noinspection PyMethodOverriding
-    def save(self, for_list: List):
-        self.instance.list = for_list
-        return super().save()
-
 
 class NewListForm(ItemForm):
+    # noinspection PyMethodOverriding
     def save(self, owner: User):
         if owner.is_authenticated:
             return List.create_new(
@@ -49,7 +45,3 @@ class ExistingListItemForm(ItemForm):
         except ValidationError as e:
             e.error_dict = {"text": [DUPLICATE_ITEM_ERROR]}
             self._update_errors(e)
-
-    # noinspection PyMethodOverriding
-    def save(self):
-        return forms.ModelForm.save(self)

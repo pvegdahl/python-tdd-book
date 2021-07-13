@@ -25,15 +25,7 @@ class ItemFormTest(TestCase):
         self.assertEqual([EMPTY_ITEM_ERROR], item_form.errors["text"])
 
         with self.assertRaises(ValueError):
-            item_form.save(for_list=None)
-
-    def test_form_save_handles_saving_to_a_list(self):
-        the_list = List.objects.create()
-        form = ItemForm(data={"text": "valid text"})
-        new_item = form.save(for_list=the_list)
-        self.assertEqual(new_item, Item.objects.first())
-        self.assertEqual("valid text", new_item.text)
-        self.assertEqual(the_list, new_item.list)
+            item_form.save()
 
 
 class ExistingListItemFormTest(TestCase):

@@ -13,7 +13,7 @@ from lists.forms import (
     ExistingListItemForm,
 )
 from lists.models import Item, List
-from lists.views import new_list2
+from lists.views import new_list
 
 EMAIL = "daffy@duck.com"
 
@@ -167,13 +167,13 @@ class NewListViewTests(unittest.TestCase):
         self.request.user = Mock()
 
     def test_passes_POST_data_to_NewListForm(self, mock_new_list_form):
-        new_list2(self.request)
+        new_list(self.request)
         mock_new_list_form.assert_called_once_with(data=self.request.POST)
 
     def test_saves_form_with_owner_if_valid(self, mock_new_list_form):
         mock_form = mock_new_list_form.return_value
         mock_form.is_valid.return_value = True
-        new_list2(self.request)
+        new_list(self.request)
         mock_form.save.assert_called_once_with(owner=self.request.user)
 
     @patch("lists.views.redirect")
@@ -183,7 +183,7 @@ class NewListViewTests(unittest.TestCase):
         mock_form = mock_new_list_form.return_value
         mock_form.is_valid.return_value = True
 
-        response = new_list2(self.request)
+        response = new_list(self.request)
 
         self.assertEqual(response, mock_redirect.return_value)
         mock_redirect.assert_called_once_with(mock_form.save.return_value)
@@ -195,7 +195,7 @@ class NewListViewTests(unittest.TestCase):
         mock_form = mock_new_list_form.return_value
         mock_form.is_valid.return_value = False
 
-        response = new_list2(self.request)
+        response = new_list(self.request)
 
         self.assertEqual(response, mock_render.return_value)
         mock_render.assert_called_once_with(
@@ -206,7 +206,7 @@ class NewListViewTests(unittest.TestCase):
         mock_form = mock_new_list_form.return_value
         mock_form.is_valid.return_value = False
 
-        new_list2(self.request)
+        new_list(self.request)
 
         mock_form.save.assert_not_called()
 
