@@ -19,6 +19,11 @@ class List(models.Model):
         Item.objects.create(text=first_item_text, list=new_list)
         return new_list
 
+    @property
+    def name(self) -> str:
+        first_item = self.item_set.first()
+        return first_item.text if first_item else "Empty List"
+
 
 class Item(models.Model):
     text = models.TextField(blank=False, default="")
