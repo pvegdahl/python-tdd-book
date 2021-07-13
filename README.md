@@ -13,3 +13,5 @@ Deployments are performed with:
   $ fab -f deploy_tools/fabfile.py deploy:host=username@your.web.address
 
 The necessary requirements for running the server are in requirements.txt.  Other libraries that are necessary for testing or useful for local development are in dev-requirements.txt.
+
+To run the functional_tests, you'll need to install geckodriver.
