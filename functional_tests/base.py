@@ -6,6 +6,10 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 
+from functional_tests.management.commands.create_session import create_preauthenticated_session
+from functional_tests.server_tools import create_session_on_server
+from superlists import settings
+
 
 def wait(fn):
     max_wait = 5
@@ -76,4 +80,18 @@ class FunctionalTest(StaticLiveServerTestCase):
         self.browser.find_element_by_name("email")
         self.assertNotIn(
             email, self.browser.find_element_by_css_selector(".navbar").text
+        )
+
+    def create_pre_authenticated_session(self, email: str):
+        if self.staging_server:
+            session_key = create_session_on_server(
+                user=os.environ.get("USER"), host=self.staging_server, email=email
+            )
+        else:
+            session_key = create_preauthenticated_session(email)
+    
+        # To set a cookie, we first need to visit the domain.  404 pages load the quickest ;-)
+        self.browser.get(f"{self.live_server_url}/404_no_such_url/")
+        self.browser.add_cookie(
+            dict(name=settings.SESSION_COOKIE_NAME, value=session_key, path="/")
         )
