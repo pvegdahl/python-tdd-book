@@ -214,3 +214,11 @@ class ShareListTest(TestCase):
             f"/lists/{the_list.id}/share"  #, data={"email": "some@email.com"}
         )
         self.assertRedirects(response, f"/lists/{the_list.id}/")
+        
+    def test_user_added_to_shared_with_list(self):
+        the_list = List.objects.create()
+        User.objects.create(email=EMAIL)
+        self.client.post(
+            f"/lists/{the_list.id}/share",  data={"email": EMAIL},
+        )
+        self.assertContains(EMAIL, the_list.shared_with)
