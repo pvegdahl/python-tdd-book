@@ -211,7 +211,7 @@ class ShareListTest(TestCase):
     def test_POST_redirects_to_list_page(self):
         the_list = List.objects.create()
         response = self.client.post(
-            f"/lists/{the_list.id}/share", data={"email": EMAIL}
+            f"/lists/{the_list.id}/share", data={"sharee": EMAIL}
         )
         self.assertRedirects(response, f"/lists/{the_list.id}/")
         
@@ -219,10 +219,13 @@ class ShareListTest(TestCase):
         the_list = List.objects.create()
         User.objects.create(email=EMAIL)
         self.client.post(
-            f"/lists/{the_list.id}/share",  data={"email": EMAIL},
+            f"/lists/{the_list.id}/share",  data={"sharee": EMAIL},
         )
-        the_list_refreshed = List.objects.get(id=the_list.id)
-        self.assertIn(EMAIL, [user.email for user in the_list_refreshed.shared_with.all()])
+        self.assertIn(EMAIL, [user.email for user in the_list.shared_with.all()])
 
     def test_new_user_added_to_shared_with_list(self):
-        pass
+        the_list = List.objects.create()
+        self.client.post(
+            f"/lists/{the_list.id}/share",  data={"sharee": EMAIL},
+        )
+        self.assertIn(EMAIL, [user.email for user in the_list.shared_with.all()])

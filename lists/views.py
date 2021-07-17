@@ -36,6 +36,7 @@ def my_lists(request: HttpRequest, email: str) -> HttpResponse:
 def share_list(request: HttpRequest, list_id: str) -> HttpResponse:
     the_list = List.objects.get(id=list_id)
     if request.method == "POST":
-        the_list.shared_with.add(request.POST["email"])
-        the_list.save()
+        email = request.POST["sharee"]
+        User.objects.get_or_create(email=email)
+        the_list.shared_with.add(email)
     return redirect(the_list)
