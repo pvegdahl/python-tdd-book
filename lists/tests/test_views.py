@@ -13,7 +13,7 @@ from lists.forms import (
     ExistingListItemForm,
 )
 from lists.models import Item, List
-from lists.views import new_list
+from lists.views import new_list, share_list
 
 EMAIL = "daffy@duck.com"
 
@@ -205,3 +205,12 @@ class MyListsTest(TestCase):
         correct_user = User.objects.create(email=EMAIL)
         response = self.client.get(f"/lists/users/{EMAIL}/")
         self.assertEqual(response.context["owner"], correct_user)
+
+
+class ShareListTest(TestCase):
+    def test_POST_redirects_to_list_page(self):
+        the_list = List.objects.create()
+        response = self.client.post(
+            f"/lists/{the_list.id}/share"  #, data={"email": "some@email.com"}
+        )
+        self.assertRedirects(response, f"/lists/{the_list.id}/")

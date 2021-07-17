@@ -44,9 +44,8 @@ class SharingTest(FunctionalTest):
 
         # Jojo notices a "Share this list" option
         share_box = list_page.get_share_box()
-        # share_box = self.browser.find_element_by_css_selector('input[name="sharee"]')
         self.assertEqual(
-            share_box.get_attribute("placeholder"), "your-friend@example.com"
+            share_box.get_attribute("placeholder"), "your.friend@example.com"
         )
 
         # Jojo shares the list and the page updates to say it is shared with Maximilian

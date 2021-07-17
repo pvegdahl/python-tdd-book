@@ -31,3 +31,8 @@ def new_list(request: HttpRequest) -> HttpResponse:
 
 def my_lists(request: HttpRequest, email: str) -> HttpResponse:
     return render(request, "my_lists.html", {"owner": (User.objects.get(email=email))})
+
+
+def share_list(request: HttpRequest, list_id: str) -> HttpResponse:
+    the_list = List.objects.get(id=list_id)
+    return redirect(the_list)
