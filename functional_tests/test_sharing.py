@@ -11,6 +11,7 @@ from selenium.webdriver.common.keys import Keys
 from accounts.views import EMAIL_SUBJECT
 from functional_tests.base import FunctionalTest
 from functional_tests.list_page import ListPage
+from functional_tests.my_lists_page import MyListsPage
 
 
 class SharingTest(FunctionalTest):
@@ -53,6 +54,7 @@ class SharingTest(FunctionalTest):
 
         # Max now goes to the my lists page on his browser
         self.browser = maximilian_browser
+        self.browser.get(self.live_server_url)
         MyListsPage(self).go_to_my_lists_page()
 
         # Max sees Jojo's list in there!
