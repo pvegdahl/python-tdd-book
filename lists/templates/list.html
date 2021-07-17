@@ -5,6 +5,9 @@
 {% block form_action %}{% url "view_list" list.id %}{% endblock %}
 
 {% block table %}
+    {% if list.owner %}
+        <p>List owner: <span id="id_list_owner">{{ list.owner.email }}</span><p>
+    {% endif %}
     <table id="id_list_table" class="table">
         {% for item in list.item_set.all %}
             <tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
