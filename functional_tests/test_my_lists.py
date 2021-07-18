@@ -1,3 +1,5 @@
+import secrets
+
 from functional_tests.base import FunctionalTest
 
 EMAIL = "bob@builder.the"
@@ -14,7 +16,7 @@ class MyListsTest(FunctionalTest):
 
     def test_logged_in_users_lists_are_saved_as_my_lists(self):
         # Pre-log in
-        self.create_pre_authenticated_session(EMAIL)
+        self.create_pre_authenticated_session(self.get_unique_email())
 
         # Go to the home page and start a list
         self.browser.get(self.live_server_url)

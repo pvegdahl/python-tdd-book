@@ -25,7 +25,7 @@ class SharingTest(FunctionalTest):
 
     def test_can_get_email_link_to_log_in(self):
         # Jojo is pre-authenticated
-        jojo_email = "jojo@site.com"
+        jojo_email = f"jojo_{self.get_unique_email()}"
         self.create_pre_authenticated_session(jojo_email)
         jojo_browser = self.browser
         self.addCleanup(lambda: self._quit_if_possible(jojo_browser))
@@ -34,7 +34,7 @@ class SharingTest(FunctionalTest):
         maximilian_browser = webdriver.Firefox()
         self.addCleanup(lambda: self._quit_if_possible(maximilian_browser))
         self.browser = maximilian_browser
-        maximilian_email = "maximilian@site.net"
+        maximilian_email = f"maximilian_{self.get_unique_email()}"
         self.create_pre_authenticated_session(maximilian_email)
 
         # Jojo starts a list

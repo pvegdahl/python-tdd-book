@@ -1,4 +1,5 @@
 import os
+import secrets
 import time
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -97,3 +98,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         self.browser.add_cookie(
             dict(name=settings.SESSION_COOKIE_NAME, value=session_key, path="/")
         )
+
+    @staticmethod
+    def get_unique_email() -> str:
+        return f"{secrets.token_hex(8)}@{secrets.token_hex(8)}.com"
