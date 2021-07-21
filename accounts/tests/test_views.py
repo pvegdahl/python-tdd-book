@@ -61,7 +61,7 @@ class LoginViewTest(TestCase):
 
     def test_calls_authenticate_with_uid_from_get_request(self, mock_auth):
         self.client.get(f"/accounts/login?token={self.uid}")
-        mock_auth.authenticate.assert_called_once_with(uid=self.uid)
+        mock_auth.authenticate.assert_called_once_with(self.uid)
 
     def test_calls_auth_login_with_user_if_there_is_one(self, mock_auth):
         response = self.client.get(f"/accounts/login?token={self.uid}")
@@ -73,3 +73,17 @@ class LoginViewTest(TestCase):
         mock_auth.authenticate.return_value = None
         self.client.get(f"/accounts/login?token={self.uid}")
         mock_auth.login.assert_not_called()
+
+
+class LogoutTest(TestCase):
+    def setUp(self) -> None:
+        self.token = Token.objects.create(email=EMAIL)
+
+    @patch("accounts.views.django_logout")
+    def test_logout_calls_django_logout(self, mock_django_logout):
+        self.client.get(f"/accounts/logout")
+        mock_django_logout.assert_called_once()
+    
+    def test_logout_redirects_to_home(self):
+        response = self.client.get(f"/accounts/logout")
+        self.assertRedirects(response, "/")

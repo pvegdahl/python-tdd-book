@@ -151,3 +151,5 @@ LOGGING = {
 }
 
 SESSION_COOKIE_NAME = "sessionid"
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

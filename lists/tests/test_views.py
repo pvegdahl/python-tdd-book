@@ -150,12 +150,14 @@ class NewListViewTests(unittest.TestCase):
         self.request.user = Mock()
 
     def test_passes_POST_data_to_NewListForm(self, mock_new_list_form):
+        mock_new_list_form.return_value.save.return_value = List.objects.create()
         new_list(self.request)
         mock_new_list_form.assert_called_once_with(data=self.request.POST)
 
     def test_saves_form_with_owner_if_valid(self, mock_new_list_form):
         mock_form = mock_new_list_form.return_value
         mock_form.is_valid.return_value = True
+        mock_form.save.return_value = List.objects.create()
         new_list(self.request)
         mock_form.save.assert_called_once_with(owner=self.request.user)
 

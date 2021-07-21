@@ -8,7 +8,7 @@ from superlists import settings
 
 
 class List(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     
     shared_with = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="shared_lists")
 
@@ -29,7 +29,7 @@ class List(models.Model):
 
 class Item(models.Model):
     text = models.TextField(blank=False, default="")
-    list = models.ForeignKey(List, default=None)
+    list = models.ForeignKey(List, default=None, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ("id",)
