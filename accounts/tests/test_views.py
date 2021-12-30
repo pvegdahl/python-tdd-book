@@ -83,7 +83,7 @@ class LogoutTest(TestCase):
     def test_logout_calls_django_logout(self, mock_django_logout):
         self.client.get(f"/accounts/logout")
         mock_django_logout.assert_called_once()
-    
+
     def test_logout_redirects_to_home(self):
         response = self.client.get(f"/accounts/logout")
         self.assertRedirects(response, "/")

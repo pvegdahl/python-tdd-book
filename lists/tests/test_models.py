@@ -94,7 +94,7 @@ class ListModelTest(TestCase):
     def test_empty_list_has_name_Empty_List(self):
         the_list = List.objects.create()
         self.assertEqual(the_list.name, "Empty List")
-        
+
     def test_lists_can_be_shared(self):
         email_1 = "lady@bug.fr"
         email_2 = "cat@noir.fr"
@@ -103,6 +103,8 @@ class ListModelTest(TestCase):
         the_list = List.objects.create()
         the_list.shared_with.add(email_1)
         the_list.shared_with.add(email_2)
-        
+
         list_from_db = List.objects.first()
-        self.assertEqual([email_2, email_1], [user.email for user in list_from_db.shared_with.all()])
+        self.assertEqual(
+            [email_2, email_1], [user.email for user in list_from_db.shared_with.all()]
+        )
